@@ -1,17 +1,33 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import styled from 'styled-components'
 
+interface Props{
+  todo: string;
+  setTodo: React.Dispatch<React.SetStateAction<string>>;
+  handleAdd: (e: React.FormEvent) => void;
+}
 
 
-export default function Inputfield() {
+
+export default function Inputfield({todo, setTodo, handleAdd}: Props) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
   return (
-    <StyledForm className='input'>
+    <StyledForm 
+    className='input' 
+    onSubmit={(e) => {
+      handleAdd(e);
+      inputRef.current?.blur();
+      }}
+    >
       <StyledInput 
+        ref={inputRef}
         type="input" 
+        value={todo}
+        onChange={(e) => setTodo(e.target.value)}
         placeholder='Enter a task' 
       />
-      <StyledButton 
-        type='submit'>
+      <StyledButton type='submit'>
         Go
       </StyledButton>
     </StyledForm>
