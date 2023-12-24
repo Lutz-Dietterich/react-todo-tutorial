@@ -1,11 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, ReactNode} from 'react';
 import './App.css';
 import InputField from './components/InputField';
 
+interface AppProps {
+  children?: ReactNode;
+}
 
 
-const App: React.FC = () =>{
-  const [todo, setTodo] = useState<string>("");
+export default function App({ children }: AppProps) {
+
+    const [todo, setTodo] = useState<string>("");
 
   return (
     <div className="App">
@@ -15,7 +19,7 @@ const App: React.FC = () =>{
   );
 }
 
-export default App;
+
 
 
 

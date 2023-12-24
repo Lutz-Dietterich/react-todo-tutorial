@@ -9,9 +9,9 @@ export default function Inputfield() {
       <StyledInput 
         type="input" 
         placeholder='Enter a task' 
-        className='input_box' 
       />
-      <StyledButton type='submit'>
+      <StyledButton 
+        type='submit'>
         Go
       </StyledButton>
     </StyledForm>
