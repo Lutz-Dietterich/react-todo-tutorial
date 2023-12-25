@@ -17,7 +17,7 @@ export default function Inputfield({todo, setTodo, handleAdd}: Props) {
     className='input' 
     onSubmit={(e) => {
       handleAdd(e);
-      inputRef.current?.blur();
+      // inputRef.current?.blur();
       }}
     >
       <StyledInput 
@@ -40,6 +40,10 @@ const StyledForm = styled.form`
   width: 90%;
   position: relative;
   align-items: center;
+
+  @media (max-width: 700px) {
+    width: 95%;
+  }
 `;
 
 
