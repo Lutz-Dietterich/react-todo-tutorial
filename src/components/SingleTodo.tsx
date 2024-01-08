@@ -3,16 +3,18 @@ import styled from 'styled-components'
 import { Todo } from '../model';
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { MdDone } from "react-icons/md";
+import { Draggable } from 'react-beautiful-dnd';
 
 
 
 type Props = {
+    index: number;
     todo: Todo,
     todos: Todo[],
-    setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+    setTodos: React.Dispatch<React.SetStateAction<Todo[]>>
 };
 
-export default function SingleTodo({ todo, todos, setTodos}: Props) {
+export default function SingleTodo({ index, todo, todos, setTodos}: Props) {
     const [edit, setEdit] = useState<boolean>(false);
     const [editTodo, setEditTodo] = useState<string>(todo.todo);
 
@@ -41,58 +43,66 @@ export default function SingleTodo({ todo, todos, setTodos}: Props) {
     }, [edit]);
 
   return (
-    <StyledTodo onSubmit={(e)=>handleEdit(e,todo.id)}>
-        {
-            edit? (
-                <StyledEditForm 
-                ref={inputRef}
-                type="text" 
-                value={editTodo} 
-                onChange={(e) => setEditTodo(e.target.value)}/>
-            ) : (
-                !todo.isDone ? (
-                    <StyledText>{todo.todo}</StyledText>
-                    ) : (
-                    <StyledStrikeText>{todo.todo}</StyledStrikeText>
-                    )
-            )
-        }
+    <Draggable draggableId={todo.id.toString()} index={index}>
 
-        <div>
-            <StyledIcon onClick={() =>{
-                    if(!edit && !todo.isDone){
-                        setEdit(!edit);
-                    }
-                }}
+        {(provided) => (
+            <StyledTodo 
+                onSubmit={(e)=>handleEdit(e,todo.id)}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+                ref={provided.innerRef}
             >
-                <AiFillEdit />
-            </StyledIcon>
-            <StyledIcon>
-                <AiFillDelete onClick={()=>handleDelete(todo.id)}/>
-            </StyledIcon>
-            <StyledIcon onClick={()=>handleDone(todo.id)}>
-                <MdDone />
-            </StyledIcon>
-        </div>
-    </StyledTodo>
+            { 
+                edit? (
+                    <StyledEditForm 
+                    ref={inputRef}
+                    type="text" 
+                    value={editTodo} 
+                    onChange={(e) => setEditTodo(e.target.value)}/>
+                ) : (
+                    !todo.isDone ? (
+                        <StyledText>{todo.todo}</StyledText>
+                        ) : (
+                        <StyledStrikeText>{todo.todo}</StyledStrikeText>
+                        )
+                )
+            }
+
+            <div>
+                <StyledIcon onClick={() =>{
+                        if(!edit && !todo.isDone){
+                            setEdit(!edit);
+                        }
+                    }}
+                >
+                    <AiFillEdit />
+                </StyledIcon>
+                <StyledIcon>
+                    <AiFillDelete onClick={()=>handleDelete(todo.id)}/>
+                </StyledIcon>
+                <StyledIcon onClick={()=>handleDone(todo.id)}>
+                    <MdDone />
+                </StyledIcon>
+            </div>
+        </StyledTodo>
+        )}
+    
+    </Draggable>
   )
 }
 
 const StyledTodo = styled.form`
     display: flex;
-    width: 29.5%;
     border-radius: 5px;
     padding: 20px;
     margin-top: 15px;
     background-image: url(https://img.freepik.com/fotos-kostenlos/draufsicht-gelbes-zerknittertes-papier_23-2149345142.jpg?w=1800&t=st=1703455616~exp=1703456216~hmac=c26e91438d9b5d6930cce95b3909503e1c0ee279c9128db1cb87026396cc83df);
+    transition: 0.2s;
 
-    @media (max-width: 700px) {
-        width: 100%;
-    }
-
-    @media (min-width: 1200px) {
-        width: 40%;
-    }
+        &:hover {
+            box-shadow: 0 0 5px black;
+            transform: scale(1.03);
+        }
 `;
 
 const StyledText = styled.span`
